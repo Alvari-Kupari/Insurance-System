@@ -10,17 +10,12 @@ public class InsuranceSystem {
 
   public InsuranceSystem() {}
 
-  public void printDatabase() {
-    // TODO: Complete this method.
-  }
+  public void printDatabase() {}
 
   public void createNewProfile(String userName, String age) {
 
-    // Format the username to title case by first converting the whole string to lowercase
-    userName.toLowerCase();
-
-    // then change the first letter to uppercase
-    String userNameFormatted = userName.substring(0, 1).toUpperCase() + userName.substring(1);
+    // Format the username to title case
+    String userNameFormatted = capitalizeFirstLetter(userName);
 
     // Check if the string age doesnt contain only digits (IE is not a number).
     if (!(age.matches("[0-9]+"))) {
@@ -34,21 +29,19 @@ public class InsuranceSystem {
     int age_integer = Integer.parseInt(age);
 
     // Next we must ensure the username is valid (more than 2 characters)
-    if (userNameIsTooSHort(userName)) {
+    if (userNameIsTooShort(userName)) {
       // Print error message for username too short
       MessageCli.INVALID_USERNAME_TOO_SHORT.printMessage(userNameFormatted);
       return;
     }
 
     // Next ensure the username is unique
-    int a = 0;
     for (int i = 0; i < dataBase.size(); i++) {
       Profile temporaryProfile = dataBase.get(i);
 
-      if (temporaryProfile.name == userNameFormatted) {
+      if ((temporaryProfile.name).equals(userNameFormatted)) {
         // if it wasnt unique then print the correct error message and exit the method
         MessageCli.INVALID_USERNAME_NOT_UNIQUE.printMessage(userNameFormatted);
-        a = 1;
         return;
       }
     }
@@ -61,9 +54,6 @@ public class InsuranceSystem {
 
     // Print the message showing the new profile was successfully created
     MessageCli.PROFILE_CREATED.printMessage(userNameFormatted, age);
-    if (a == 1) {
-      System.out.println("doggies");
-    }
   }
 
   public void loadProfile(String userName) {
@@ -83,7 +73,7 @@ public class InsuranceSystem {
   }
 
   // Helper methods
-  public boolean userNameIsTooSHort(String userName) {
+  public boolean userNameIsTooShort(String userName) {
 
     // Check the length (if less than 3 then return true)
     if (userName.length() < 3) {
@@ -92,5 +82,14 @@ public class InsuranceSystem {
 
     // else return false
     return false;
+  }
+
+  public String capitalizeFirstLetter(String string) {
+    String everythingButFirstLetter = string.substring(1);
+    String unCapitalized = everythingButFirstLetter.toLowerCase();
+    String firstLetter = string.substring(0, 1);
+    String firstLetterCapitalized = firstLetter.toUpperCase();
+
+    return firstLetterCapitalized + unCapitalized;
   }
 }
