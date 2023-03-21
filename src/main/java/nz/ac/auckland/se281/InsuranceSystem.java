@@ -10,7 +10,36 @@ public class InsuranceSystem {
 
   public InsuranceSystem() {}
 
-  public void printDatabase() {}
+  public void printDatabase() {
+
+    // create a variable to store the number of profiles
+    int profileCount = dataBase.size();
+
+    // Display the correct message if there are 0 profiles
+    if (profileCount == 0) {
+      MessageCli.PRINT_DB_POLICY_COUNT.printMessage("0", "s", ".");
+    }
+    // next account for the case where there is 1 profile
+    else if (profileCount == 1) {
+      MessageCli.PRINT_DB_POLICY_COUNT.printMessage("1", "", ":");
+    }
+
+    // Finally, if there is more than 1 profile, display the correct message
+    else {
+      MessageCli.PRINT_DB_POLICY_COUNT.printMessage(Integer.toString(profileCount), "s", ":");
+    }
+
+    // now loop through the database and display each name and age ranked
+    for (int i = 0; i < profileCount; i++) {
+      System.out.println(
+          " "
+              + (i + 1)
+              + ": "
+              + dataBase.get(i).name
+              + ", "
+              + Integer.toString(dataBase.get(i).age));
+    }
+  }
 
   public void createNewProfile(String userName, String age) {
 
@@ -85,11 +114,20 @@ public class InsuranceSystem {
   }
 
   public String capitalizeFirstLetter(String string) {
+
+    // first create a string of everything but the first letter
     String everythingButFirstLetter = string.substring(1);
+
+    // convert the previous string to lower case
     String unCapitalized = everythingButFirstLetter.toLowerCase();
+
+    // isolate the first letter
     String firstLetter = string.substring(0, 1);
+
+    // convert the first letter to uppercase
     String firstLetterCapitalized = firstLetter.toUpperCase();
 
+    // return the two strings mashed together
     return firstLetterCapitalized + unCapitalized;
   }
 }
