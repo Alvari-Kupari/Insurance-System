@@ -19,6 +19,7 @@ public class InsuranceSystem {
     if (profileCount == 0) {
       MessageCli.PRINT_DB_POLICY_COUNT.printMessage("0", "s", ".");
     }
+
     // next account for the case where there is 1 profile
     else if (profileCount == 1) {
       MessageCli.PRINT_DB_POLICY_COUNT.printMessage("1", "", ":");
@@ -55,7 +56,7 @@ public class InsuranceSystem {
     }
 
     // Next, the age must be converted into an integer
-    int age_integer = Integer.parseInt(age);
+    int ageInteger = Integer.parseInt(age);
 
     // Next we must ensure the username is valid (more than 2 characters)
     if (userNameIsTooShort(userName)) {
@@ -76,7 +77,7 @@ public class InsuranceSystem {
     }
 
     // create the new profile
-    Profile newProfile = new Profile(userNameFormatted, age_integer);
+    Profile newProfile = new Profile(userNameFormatted, ageInteger);
 
     // add the new profile into the arraylist to store it
     dataBase.add(newProfile);
