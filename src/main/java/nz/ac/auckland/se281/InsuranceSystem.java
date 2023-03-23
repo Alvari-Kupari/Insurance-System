@@ -36,9 +36,9 @@ public class InsuranceSystem {
           " "
               + (i + 1)
               + ": "
-              + dataBase.get(i).name
+              + dataBase.get(i).getName()
               + ", "
-              + Integer.toString(dataBase.get(i).age));
+              + Integer.toString(dataBase.get(i).getAge()));
     }
   }
 
@@ -69,7 +69,7 @@ public class InsuranceSystem {
     for (int i = 0; i < dataBase.size(); i++) {
       Profile temporaryProfile = dataBase.get(i);
 
-      if ((temporaryProfile.name).equals(userNameFormatted)) {
+      if ((temporaryProfile.getName()).equals(userNameFormatted)) {
         // if it wasnt unique then print the correct error message and exit the method
         MessageCli.INVALID_USERNAME_NOT_UNIQUE.printMessage(userNameFormatted);
         return;
