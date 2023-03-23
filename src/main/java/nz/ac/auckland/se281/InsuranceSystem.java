@@ -45,13 +45,13 @@ public class InsuranceSystem {
   public void createNewProfile(String userName, String age) {
 
     // Format the username to title case
-    String userNameFormatted = capitalizeFirstLetter(userName);
+    userName = capitalizeFirstLetter(userName);
 
     // Check if the string age doesnt contain only digits (IE is not a number).
     if (!(age.matches("[0-9]+"))) {
 
       // if the string age was invalid, print the error message for invalid age, then return
-      MessageCli.INVALID_AGE.printMessage(age, userNameFormatted);
+      MessageCli.INVALID_AGE.printMessage(age, userName);
       return;
     }
 
@@ -61,7 +61,7 @@ public class InsuranceSystem {
     // Next we must ensure the username is valid (more than 2 characters)
     if (userNameIsTooShort(userName)) {
       // Print error message for username too short
-      MessageCli.INVALID_USERNAME_TOO_SHORT.printMessage(userNameFormatted);
+      MessageCli.INVALID_USERNAME_TOO_SHORT.printMessage(userName);
       return;
     }
 
@@ -69,25 +69,25 @@ public class InsuranceSystem {
     for (int i = 0; i < dataBase.size(); i++) {
       Profile temporaryProfile = dataBase.get(i);
 
-      if ((temporaryProfile.getName()).equals(userNameFormatted)) {
+      if ((temporaryProfile.getName()).equals(userName)) {
         // if it wasnt unique then print the correct error message and exit the method
-        MessageCli.INVALID_USERNAME_NOT_UNIQUE.printMessage(userNameFormatted);
+        MessageCli.INVALID_USERNAME_NOT_UNIQUE.printMessage(userName);
         return;
       }
     }
 
     // create the new profile
-    Profile newProfile = new Profile(userNameFormatted, ageInteger);
+    Profile newProfile = new Profile(userName, ageInteger);
 
     // add the new profile into the arraylist to store it
     dataBase.add(newProfile);
 
     // Print the message showing the new profile was successfully created
-    MessageCli.PROFILE_CREATED.printMessage(userNameFormatted, age);
+    MessageCli.PROFILE_CREATED.printMessage(userName, age);
   }
 
   public void loadProfile(String userName) {
-    // TODO: Complete this method.
+    //Format the username properly
   }
 
   public void unloadProfile() {
@@ -131,4 +131,5 @@ public class InsuranceSystem {
     // return the two strings mashed together
     return firstLetterCapitalized + unCapitalized;
   }
+
 }
