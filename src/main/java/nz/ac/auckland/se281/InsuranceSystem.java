@@ -18,15 +18,13 @@ public class InsuranceSystem {
     // Display the correct message if there are 0 profiles
     if (profileCount == 0) {
       MessageCli.PRINT_DB_POLICY_COUNT.printMessage("0", "s", ".");
-    }
 
-    // next account for the case where there is 1 profile
-    else if (profileCount == 1) {
+      // next account for the case where there is 1 profile
+    } else if (profileCount == 1) {
       MessageCli.PRINT_DB_POLICY_COUNT.printMessage("1", "", ":");
-    }
 
-    // Finally, if there is more than 1 profile, display the correct message
-    else {
+      // Finally, if there is more than 1 profile, display the correct message
+    } else {
       MessageCli.PRINT_DB_POLICY_COUNT.printMessage(Integer.toString(profileCount), "s", ":");
     }
 
@@ -87,7 +85,30 @@ public class InsuranceSystem {
   }
 
   public void loadProfile(String userName) {
-    //Format the username properly
+    // initialise a variable to reprsent if the profile was found
+    boolean profileFound = false;
+
+    // Format the username properly
+    userName = capitalizeFirstLetter(userName);
+
+    // Next loop through the database
+    for (int i = 0; i < dataBase.size(); i++) {
+
+      // extract the profile
+      Profile temporaryProfile = dataBase.get(i);
+
+      // if the profile was found, set profileFound to true
+      if (temporaryProfile.getName().equals(userName)) {
+        profileFound = true;
+      }
+    }
+
+    if (!profileFound) {
+
+      // if no profile was found, then print the appropriate error message and exit the method
+      MessageCli.NO_PROFILE_FOUND_TO_LOAD.printMessage(userName);
+      return;
+    }
   }
 
   public void unloadProfile() {
@@ -131,5 +152,4 @@ public class InsuranceSystem {
     // return the two strings mashed together
     return firstLetterCapitalized + unCapitalized;
   }
-
 }
