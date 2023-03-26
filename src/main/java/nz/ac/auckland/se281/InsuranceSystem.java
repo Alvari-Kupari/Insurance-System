@@ -171,10 +171,15 @@ public class InsuranceSystem {
   }
 
   public void createPolicy(PolicyType type, String[] options) {
-    // TODO: Complete this method.
+    // first ensure a profile is loaded
+    if (this.loadedProfileIndex == -1) {
+      // if no profile is loaded, exit
+      MessageCli.NO_PROFILE_FOUND_TO_CREATE_POLICY.printMessage();
+      return;
+    }
   }
 
-  // Helper methods
+  // **Helper methods**
   public boolean userNameIsTooShort(String userName) {
 
     // Check the length (if less than 3 then return true)
@@ -182,7 +187,7 @@ public class InsuranceSystem {
       return true;
     }
 
-    // else return false
+    // else return not true
     return false;
   }
 
