@@ -8,7 +8,13 @@ public class InsuranceSystem {
   // Initialising the database using an arraylist
   ArrayList<Profile> dataBase = new ArrayList<>();
 
-  public InsuranceSystem() {}
+  // initialise the index of the loaded profile
+  private int loadedProfileIndex;
+
+  public InsuranceSystem() {
+    // -1 = no loaded profile, otherwise it indicates the index of loaded profile
+    this.loadedProfileIndex = -1;
+  }
 
   public void printDatabase() {
 
@@ -32,7 +38,7 @@ public class InsuranceSystem {
     for (int i = 0; i < profileCount; i++) {
 
       // if the current profile is the loaded profile, use the loaded profile message
-      if (dataBase.get(i).isLoaded()) {
+      if (i == loadedProfileIndex) {
         MessageCli.PRINT_DB_PROFILE_HEADER_SHORT.printMessage(
             "*** ",
             Integer.toString(i + 1),
@@ -50,6 +56,15 @@ public class InsuranceSystem {
   }
 
   public void createNewProfile(String userName, String age) {
+
+    // first we must check if there is a loaded profile
+    if (this.loadedProfileIndex != -1) {
+      
+      // if there is a loaded profile, return and print the correct error message
+      MessageCli.CANNOT_CREATE_WHILE_LOADED.printMessage(
+          dataBase.get(loadedProfileIndex).getName());
+      return;
+    }
 
     // Format the username to title case
     userName = capitalizeFirstLetter(userName);
@@ -90,28 +105,14 @@ public class InsuranceSystem {
   }
 
   public void loadProfile(String userName) {
-    // initialise a variable to reprsent if the profile was found
-    boolean profileFound = false;
-    int rank = 0;
 
     // Format the username properly
     userName = capitalizeFirstLetter(userName);
 
-    // Next loop through the database
-    for (int i = 0; i < dataBase.size(); i++) {
+    // find if there is a matching name in the databse
+    int profileRank = getIndexOfMatchingProfile(dataBase, userName);
 
-      // extract the profile
-      Profile temporaryProfile = dataBase.get(i);
-
-      // if the profile was found, set profileFound to true
-      if (temporaryProfile.getName().equals(userName)) {
-        profileFound = true;
-        // also keep track of which profile is to be loaded
-        rank = i + 1;
-      }
-    }
-
-    if (!profileFound) {
+    if (profileRank == -1) {
 
       // if no profile was found, then print the appropriate error message and exit the method
       MessageCli.NO_PROFILE_FOUND_TO_LOAD.printMessage(userName);
@@ -119,11 +120,8 @@ public class InsuranceSystem {
     }
 
     // load the profile and display the load message
-    dataBase.get(rank - 1).load();
+    this.loadedProfileIndex = profileRank;
     MessageCli.PROFILE_LOADED.printMessage(userName);
-
-    // set the insurance system to have a loaded profile
-
   }
 
   public void unloadProfile() {
@@ -182,5 +180,18 @@ public class InsuranceSystem {
     }
     // otherwise the username is unique
     return true;
+  }
+
+  public int getIndexOfMatchingProfile(ArrayList dataBase, String userName) {
+    for (int i = 0; i < dataBase.size(); i++) {
+      Profile temporaryProfile = (Profile) dataBase.get(i);
+
+      // if the temporary profile name matches the username inputted, return the index
+      if (temporaryProfile.getName().equals(userName)) {
+        return i;
+      }
+    }
+    // if the matching name wasnt found, return -1 to represent no profile found
+    return -1;
   }
 }
