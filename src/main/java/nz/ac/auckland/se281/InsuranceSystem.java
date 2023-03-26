@@ -30,13 +30,22 @@ public class InsuranceSystem {
 
     // now loop through the database and display each name and age ranked
     for (int i = 0; i < profileCount; i++) {
-      System.out.println(
-          " "
-              + (i + 1)
-              + ": "
-              + dataBase.get(i).getName()
-              + ", "
-              + Integer.toString(dataBase.get(i).getAge()));
+
+      // if the current profile is the loaded profile, use the loaded profile message
+      if (dataBase.get(i).isLoaded()) {
+        MessageCli.PRINT_DB_PROFILE_HEADER_SHORT.printMessage(
+            "*** ",
+            Integer.toString(i + 1),
+            dataBase.get(i).getName(),
+            Integer.toString(dataBase.get(i).getAge()));
+
+        // otherwise, use the normal formatting for a profile
+      } else {
+        MessageCli.PRINT_DB_PROFILE_HEADER_MINIMAL.printMessage(
+            Integer.toString(i + 1),
+            dataBase.get(i).getName(),
+            Integer.toString(dataBase.get(i).getAge()));
+      }
     }
   }
 
@@ -64,14 +73,10 @@ public class InsuranceSystem {
     }
 
     // Next ensure the username is unique
-    for (int i = 0; i < dataBase.size(); i++) {
-      Profile temporaryProfile = dataBase.get(i);
-
-      if ((temporaryProfile.getName()).equals(userName)) {
-        // if it wasnt unique then print the correct error message and exit the method
-        MessageCli.INVALID_USERNAME_NOT_UNIQUE.printMessage(userName);
-        return;
-      }
+    if (!userNameIsUnique(dataBase, userName)) {
+      // if it wasnt unique print the error message and exit the method
+      MessageCli.INVALID_USERNAME_NOT_UNIQUE.printMessage(userName);
+      return;
     }
 
     // create the new profile
@@ -87,6 +92,7 @@ public class InsuranceSystem {
   public void loadProfile(String userName) {
     // initialise a variable to reprsent if the profile was found
     boolean profileFound = false;
+    int rank = 0;
 
     // Format the username properly
     userName = capitalizeFirstLetter(userName);
@@ -100,6 +106,8 @@ public class InsuranceSystem {
       // if the profile was found, set profileFound to true
       if (temporaryProfile.getName().equals(userName)) {
         profileFound = true;
+        // also keep track of which profile is to be loaded
+        rank = i + 1;
       }
     }
 
@@ -109,6 +117,13 @@ public class InsuranceSystem {
       MessageCli.NO_PROFILE_FOUND_TO_LOAD.printMessage(userName);
       return;
     }
+
+    // load the profile and display the load message
+    dataBase.get(rank - 1).load();
+    MessageCli.PROFILE_LOADED.printMessage(userName);
+
+    // set the insurance system to have a loaded profile
+
   }
 
   public void unloadProfile() {
@@ -151,5 +166,21 @@ public class InsuranceSystem {
 
     // return the two strings mashed together
     return firstLetterCapitalized + unCapitalized;
+  }
+
+  public boolean userNameIsUnique(ArrayList dataBase, String userName) {
+
+    // loop through the database
+    for (int i = 0; i < dataBase.size(); i++) {
+      Profile temporaryProfile = (Profile) dataBase.get(i);
+
+      if ((temporaryProfile.getName()).equals(userName)) {
+        // if it wasnt unique then return 0
+
+        return false;
+      }
+    }
+    // otherwise the username is unique
+    return true;
   }
 }
