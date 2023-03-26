@@ -15,4 +15,15 @@ public abstract class Policy {
   public int getPremium() {
     return this.basePremium;
   }
+
+  public void applyDiscount(int numPolicies) {
+    // if 2 policies, reduce premium by 10%
+    if (numPolicies == 2) {
+      this.basePremium = (int) 0.9 * this.basePremium;
+
+    } else if (numPolicies >= 3) {
+      // if 3 or more policies, reduce premium by 20%
+      this.basePremium = this.basePremium * (int) 0.8;
+    }
+  }
 }

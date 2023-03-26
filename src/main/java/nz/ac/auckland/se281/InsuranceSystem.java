@@ -177,6 +177,18 @@ public class InsuranceSystem {
       MessageCli.NO_PROFILE_FOUND_TO_CREATE_POLICY.printMessage();
       return;
     }
+
+    // extract the loaded profile beforehand to avoid code repetition
+    Profile loadedProfile = dataBase.get(loadedProfileIndex);
+
+    // next, we must check that if its a life policy, age <= 100 years
+    if (type == PolicyType.LIFE
+        && (loadedProfile.getNumOfLifePolicies() >= 1 || loadedProfile.getAge() > 100)) {
+      // print error message and exit the method
+      MessageCli.OVER_AGE_LIMIT_LIFE_POLICY.printMessage(loadedProfile.getName());
+    }
+    // next make sure they dont already have a life policy
+
   }
 
   // **Helper methods**
