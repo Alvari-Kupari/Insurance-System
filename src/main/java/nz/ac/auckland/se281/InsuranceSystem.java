@@ -38,7 +38,7 @@ public class InsuranceSystem {
     for (int i = 0; i < profileCount; i++) {
 
       // if the current profile is the loaded profile, use the loaded profile message
-      if (i == loadedProfileIndex) {
+      if (i == this.loadedProfileIndex) {
         MessageCli.PRINT_DB_PROFILE_HEADER_SHORT.printMessage(
             "*** ",
             Integer.toString(i + 1),
@@ -59,10 +59,10 @@ public class InsuranceSystem {
 
     // first we must check if there is a loaded profile
     if (this.loadedProfileIndex != -1) {
-      
+
       // if there is a loaded profile, return and print the correct error message
       MessageCli.CANNOT_CREATE_WHILE_LOADED.printMessage(
-          dataBase.get(loadedProfileIndex).getName());
+          dataBase.get(this.loadedProfileIndex).getName());
       return;
     }
 
@@ -125,7 +125,17 @@ public class InsuranceSystem {
   }
 
   public void unloadProfile() {
-    // TODO: Complete this method.
+    // if there is no loaded profile, display the error message and exit the method
+    if (this.loadedProfileIndex == -1) {
+      MessageCli.NO_PROFILE_LOADED.printMessage();
+      return;
+    }
+
+    // print the unloaded message
+    MessageCli.PROFILE_UNLOADED.printMessage(dataBase.get(this.loadedProfileIndex).getName());
+
+    // unload the profile
+    this.loadedProfileIndex = -1;
   }
 
   public void deleteProfile(String userName) {
