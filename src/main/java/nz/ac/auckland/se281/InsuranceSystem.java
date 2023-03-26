@@ -139,7 +139,35 @@ public class InsuranceSystem {
   }
 
   public void deleteProfile(String userName) {
-    // TODO: Complete this method.
+
+    // format the username
+    userName = capitalizeFirstLetter(userName);
+
+    // first find the profile to be deleted
+    int indexOfMatchingProfile = getIndexOfMatchingProfile(dataBase, userName);
+
+    if (indexOfMatchingProfile == -1) {
+      // if no profile was found, print the error message and exit
+      MessageCli.NO_PROFILE_FOUND_TO_DELETE.printMessage(userName);
+      return;
+    }
+    // next we must ensure the profile to be deleted isnt currently loaded
+    if (indexOfMatchingProfile == this.loadedProfileIndex) {
+      // if it is loaded, print the error message and exit
+      MessageCli.CANNOT_DELETE_PROFILE_WHILE_LOADED.printMessage(
+          dataBase.get(loadedProfileIndex).getName());
+      return;
+    }
+
+    // if no violations occurred, then we can delete the profile and display the deleted message
+    MessageCli.PROFILE_DELETED.printMessage(dataBase.get(indexOfMatchingProfile).getName());
+    dataBase.remove(indexOfMatchingProfile);
+
+    // if the deleted profile was lower in the database than the loaded profile, move down
+    // loadedProfileIndex
+    if ((indexOfMatchingProfile < this.loadedProfileIndex) && (this.loadedProfileIndex != -1)) {
+      this.loadedProfileIndex--;
+    }
   }
 
   public void createPolicy(PolicyType type, String[] options) {
