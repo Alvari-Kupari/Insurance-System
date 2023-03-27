@@ -181,14 +181,94 @@ public class InsuranceSystem {
     // extract the loaded profile beforehand to avoid code repetition
     Profile loadedProfile = dataBase.get(loadedProfileIndex);
 
-    // next, we must check that if its a life policy, age <= 100 years
-    if (type == PolicyType.LIFE
-        && (loadedProfile.getNumOfLifePolicies() >= 1 || loadedProfile.getAge() > 100)) {
-      // print error message and exit the method
-      MessageCli.OVER_AGE_LIMIT_LIFE_POLICY.printMessage(loadedProfile.getName());
-    }
-    // next make sure they dont already have a life policy
+    if (type == PolicyType.LIFE) {
+      // next, we must check that if its a life policy, age <= 100 years
+      if (loadedProfile.getAge() > 100) {
+        // print error message and exit the method
+        MessageCli.OVER_AGE_LIMIT_LIFE_POLICY.printMessage(loadedProfile.getName());
+      }
 
+      // now ensure they dont already have a life policy
+      if (loadedProfile.hasLifePolicy()) {
+        // if they did, print the error message and exit
+        MessageCli.ALREADY_HAS_LIFE_POLICY.printMessage(loadedProfile.getName());
+      }
+    }
+
+    // declare a variable for sum insured and policy type to save code
+    int sumInsured = Integer.parseInt(options[0]);
+    String policyType = "";
+
+    // use a switch statement to cover the cases
+    switch (type) {
+      case LIFE:
+
+        // declare a new life policy
+        LifePolicy lifePolicy = new LifePolicy(sumInsured, loadedProfile);
+
+        // add policy to profile
+        loadedProfile.Policies.add(lifePolicy);
+
+        // update string policytype
+        policyType = "life";
+
+        break;
+
+      case HOME:
+
+        // convert string "y" / "n" to boolean
+        boolean isRental;
+        if (options[2].equals("yes")) {
+          // then true
+          isRental = true;
+
+        } else {
+          // otherwise not a rental
+          isRental = false;
+        }
+        // declare a new home policy
+        HomePolicy homePolicy = new HomePolicy(sumInsured, options[1], isRental);
+
+        // add policy to profile
+        loadedProfile.Policies.add(homePolicy);
+
+        // update string policytype
+        policyType = "home";
+        break;
+
+      case CAR:
+
+        // convert mechnicalbreakdown string into boolean
+        boolean mechanicalBreakdownCovered;
+
+        if (options[3].equals("yes")) {
+          // if yes then its covered
+          mechanicalBreakdownCovered = true;
+
+        } else {
+          // otherwise not covered
+          mechanicalBreakdownCovered = false;
+        }
+        // create new car policy
+        CarPolicy carPolicy =
+            new CarPolicy(
+                sumInsured, loadedProfile, mechanicalBreakdownCovered, options[1], options[2]);
+
+        // then add the policy to profile
+        loadedProfile.Policies.add(carPolicy);
+
+        // update string policytype
+        policyType = "car";
+        break;
+
+      default:
+        break;
+    }
+    // inform that a new policy was successfully created
+    MessageCli.NEW_POLICY_CREATED.printMessage(policyType, loadedProfile.getName());
+
+    // after policy created, update the discount status
+    loadedProfile.updateDiscount();
   }
 
   // **Helper methods**

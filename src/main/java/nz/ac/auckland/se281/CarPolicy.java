@@ -20,13 +20,13 @@ public class CarPolicy extends Policy {
 
     if (profile.getAge() < 25) {
       // if the client is under 25, the premium is 15% of sum insured
-      this.basePremium = (int) 0.15 * sumInsured;
+      this.basePremium = (int) (0.15 * sumInsured);
     } else {
       // otherwise it is 10%
-      this.basePremium = (int) 0.10 * sumInsured;
+      this.basePremium = (int) (0.10 * sumInsured);
     }
     // if mechanical breakdown is included, add 80
-    if (mechanicalBreakdownCovered) {
+    if (this.mechanicalBreakdownCovered) {
       this.basePremium += 80;
     }
   }

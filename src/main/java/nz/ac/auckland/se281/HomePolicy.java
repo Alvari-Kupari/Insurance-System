@@ -11,11 +11,11 @@ public class HomePolicy extends Policy {
 
     // if the home is rented, base premium is 2% of sum insured
     if (isRental) {
-      this.basePremium = (int) 0.02 * sumInsured;
+      this.basePremium = (int) (0.02 * sumInsured);
 
     } else {
       // base premium is 1% of sum insured if house isnt rented
-      this.basePremium = (int) 0.01 * sumInsured;
+      this.basePremium = (int) (0.01 * sumInsured);
     }
   }
 }

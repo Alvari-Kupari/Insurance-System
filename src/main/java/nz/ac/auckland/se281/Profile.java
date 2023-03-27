@@ -5,15 +5,13 @@ import java.util.ArrayList;
 public class Profile {
   private String name;
   private int age;
-  private boolean discounted;
   ArrayList<Policy> Policies = new ArrayList<>();
-  int numLifePolicies;
+  private boolean hasLifePolicy;
 
   public Profile(String name, int age) {
     this.name = name;
     this.age = age;
-    this.discounted = false;
-    this.numLifePolicies = 0;
+    this.hasLifePolicy = false;
   }
 
   public String getName() {
@@ -29,19 +27,28 @@ public class Profile {
     int totalPremium = 0;
     for (int i = 0; i < this.Policies.size(); i++) {
       // increase the total premium for each policy
-      totalPremium += this.Policies.get(i).getPremium();
+      totalPremium += this.Policies.get(i).getDiscountedPremium();
     }
     // return the total running premium.
     return totalPremium;
   }
 
-  public boolean isDiscounted() {
-    // return whether this profile has a discount applied
-    return this.discounted;
+  public boolean hasLifePolicy() {
+    // returns the number of life policies
+    return this.hasLifePolicy;
   }
 
-  public int getNumOfLifePolicies() {
-    // returns the number of life policies
-    return this.numLifePolicies;
+  public void gotLifePolicy() {
+    this.hasLifePolicy = true;
+  }
+
+  public void updateDiscount() {
+    // initialise a variable representing the number of policies
+    int numPolicies = this.Policies.size();
+
+    // loop through the arraylist of policies and apply the discount for each
+    for (int i = 0; i < numPolicies; i++) {
+      this.Policies.get(i).applyDiscount(numPolicies);
+    }
   }
 }
