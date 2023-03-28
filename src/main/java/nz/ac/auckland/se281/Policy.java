@@ -17,6 +17,10 @@ public abstract class Policy {
     return this.discountedPremium;
   }
 
+  public int getSumInsured() {
+    return this.sumInsured;
+  }
+
   public void applyDiscount(int numPolicies) {
 
     // if 2 policies, reduce premium by 10%

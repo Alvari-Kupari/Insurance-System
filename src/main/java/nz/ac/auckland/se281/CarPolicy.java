@@ -30,4 +30,8 @@ public class CarPolicy extends Policy {
       this.basePremium += 80;
     }
   }
+
+  public String getMakeAndModel() {
+    return this.makeAndModel;
+  }
 }

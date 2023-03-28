@@ -18,4 +18,8 @@ public class HomePolicy extends Policy {
       this.basePremium = (int) (0.01 * sumInsured);
     }
   }
+
+  public String getAddress() {
+    return this.address;
+  }
 }

@@ -37,20 +37,72 @@ public class InsuranceSystem {
     // now loop through the database and display each name and age ranked
     for (int i = 0; i < profileCount; i++) {
 
-      // if the current profile is the loaded profile, use the loaded profile message
+      // check if the profile is loaded. if so, make a string for the asterisks
+      String stars = "";
       if (i == this.loadedProfileIndex) {
-        MessageCli.PRINT_DB_PROFILE_HEADER_SHORT.printMessage(
-            "*** ",
-            Integer.toString(i + 1),
-            dataBase.get(i).getName(),
-            Integer.toString(dataBase.get(i).getAge()));
+        stars = "*** ";
+      }
+      // initialise variables
+      Profile profile = dataBase.get(i);
+      int numPolicies = profile.Policies.size();
 
-        // otherwise, use the normal formatting for a profile
-      } else {
-        MessageCli.PRINT_DB_PROFILE_HEADER_MINIMAL.printMessage(
-            Integer.toString(i + 1),
-            dataBase.get(i).getName(),
-            Integer.toString(dataBase.get(i).getAge()));
+      // next, format the word "policy" depending on how many policies they have
+      String wordPolicy = "";
+      switch (numPolicies) {
+        case 1:
+          wordPolicy = "y";
+          break;
+
+        default:
+          wordPolicy = "ies";
+          break;
+      }
+
+      // next print the profile
+      MessageCli.PRINT_DB_PROFILE_HEADER_LONG.printMessage(
+          stars,
+          Integer.toString(i + 1),
+          profile.getName(),
+          Integer.toString(profile.getAge()),
+          Integer.toString(numPolicies),
+          wordPolicy,
+          Integer.toString(profile.getTotalPremium()));
+
+      // next we will print the policy details of each client by looping through each policy
+      for (int j = 0; j < profile.Policies.size(); j++) {
+        // extract the policy
+        Policy policy = profile.Policies.get(j);
+
+        // use an if statement to cover the different policy types
+        if (policy instanceof LifePolicy) {
+          // life policy header
+          MessageCli.PRINT_DB_LIFE_POLICY.printMessage(
+              Integer.toString(policy.getSumInsured()),
+              Integer.toString(policy.getPremium()),
+              Integer.toString(policy.getDiscountedPremium()));
+
+          // next cover the case for home policy
+        } else if (policy instanceof HomePolicy) {
+          // cast policy to home
+          HomePolicy tempPolicy = (HomePolicy) policy;
+
+          MessageCli.PRINT_DB_HOME_POLICY.printMessage(
+              tempPolicy.getAddress(),
+              Integer.toString(policy.getSumInsured()),
+              Integer.toString(policy.getPremium()),
+              Integer.toString(policy.getDiscountedPremium()));
+
+          // now cover the car policy case
+        } else if (policy instanceof CarPolicy) {
+          // cast policy to car
+          CarPolicy tempPolicy = (CarPolicy) policy;
+
+          MessageCli.PRINT_DB_CAR_POLICY.printMessage(
+              tempPolicy.getMakeAndModel(),
+              Integer.toString(policy.getSumInsured()),
+              Integer.toString(policy.getPremium()),
+              Integer.toString(policy.getDiscountedPremium()));
+        }
       }
     }
   }
@@ -186,12 +238,14 @@ public class InsuranceSystem {
       if (loadedProfile.getAge() > 100) {
         // print error message and exit the method
         MessageCli.OVER_AGE_LIMIT_LIFE_POLICY.printMessage(loadedProfile.getName());
+        return;
       }
 
       // now ensure they dont already have a life policy
       if (loadedProfile.hasLifePolicy()) {
         // if they did, print the error message and exit
         MessageCli.ALREADY_HAS_LIFE_POLICY.printMessage(loadedProfile.getName());
+        return;
       }
     }
 
@@ -211,6 +265,9 @@ public class InsuranceSystem {
 
         // update string policytype
         policyType = "life";
+
+        // update the profile to have a life policy
+        loadedProfile.gotLifePolicy();
 
         break;
 
