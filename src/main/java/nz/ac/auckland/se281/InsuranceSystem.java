@@ -19,7 +19,7 @@ public class InsuranceSystem {
   public void printDatabase() {
 
     // create a variable to store the number of profiles
-    int profileCount = dataBase.size();
+    int profileCount = this.dataBase.size();
 
     // Display the correct message if there are 0 profiles
     if (profileCount == 0) {
@@ -43,7 +43,7 @@ public class InsuranceSystem {
         stars = "*** ";
       }
       // initialise variables
-      Profile profile = dataBase.get(i);
+      Profile profile = this.dataBase.get(i);
       int numPolicies = profile.policies.size();
 
       // next, format the word "policy" depending on how many policies they have
@@ -114,7 +114,7 @@ public class InsuranceSystem {
 
       // if there is a loaded profile, return and print the correct error message
       MessageCli.CANNOT_CREATE_WHILE_LOADED.printMessage(
-          dataBase.get(this.loadedProfileIndex).getName());
+          this.dataBase.get(this.loadedProfileIndex).getName());
       return;
     }
 
@@ -140,7 +140,7 @@ public class InsuranceSystem {
     }
 
     // Next ensure the username is unique
-    if (!userNameIsUnique(dataBase, userName)) {
+    if (!userNameIsUnique(userName)) {
       // if it wasnt unique print the error message and exit the method
       MessageCli.INVALID_USERNAME_NOT_UNIQUE.printMessage(userName);
       return;
@@ -150,7 +150,7 @@ public class InsuranceSystem {
     Profile newProfile = new Profile(userName, ageInteger);
 
     // add the new profile into the arraylist to store it
-    dataBase.add(newProfile);
+    this.dataBase.add(newProfile);
 
     // Print the message showing the new profile was successfully created
     MessageCli.PROFILE_CREATED.printMessage(userName, age);
@@ -162,7 +162,7 @@ public class InsuranceSystem {
     userName = capitalizeFirstLetter(userName);
 
     // find if there is a matching name in the databse
-    int profileRank = getIndexOfMatchingProfile(dataBase, userName);
+    int profileRank = getIndexOfMatchingProfile(userName);
 
     if (profileRank == -1) {
 
@@ -184,7 +184,7 @@ public class InsuranceSystem {
     }
 
     // print the unloaded message
-    MessageCli.PROFILE_UNLOADED.printMessage(dataBase.get(this.loadedProfileIndex).getName());
+    MessageCli.PROFILE_UNLOADED.printMessage(this.dataBase.get(this.loadedProfileIndex).getName());
 
     // unload the profile
     this.loadedProfileIndex = -1;
@@ -196,7 +196,7 @@ public class InsuranceSystem {
     userName = capitalizeFirstLetter(userName);
 
     // first find the profile to be deleted
-    int indexOfMatchingProfile = getIndexOfMatchingProfile(dataBase, userName);
+    int indexOfMatchingProfile = getIndexOfMatchingProfile(userName);
 
     if (indexOfMatchingProfile == -1) {
       // if no profile was found, print the error message and exit
@@ -207,13 +207,13 @@ public class InsuranceSystem {
     if (indexOfMatchingProfile == this.loadedProfileIndex) {
       // if it is loaded, print the error message and exit
       MessageCli.CANNOT_DELETE_PROFILE_WHILE_LOADED.printMessage(
-          dataBase.get(loadedProfileIndex).getName());
+          this.dataBase.get(loadedProfileIndex).getName());
       return;
     }
 
     // if no violations occurred, then we can delete the profile and display the deleted message
     MessageCli.PROFILE_DELETED.printMessage(dataBase.get(indexOfMatchingProfile).getName());
-    dataBase.remove(indexOfMatchingProfile);
+    this.dataBase.remove(indexOfMatchingProfile);
 
     // if the deleted profile was lower in the database than the loaded profile, move down
     // loadedProfileIndex
@@ -358,29 +358,25 @@ public class InsuranceSystem {
     return firstLetterCapitalized + unCapitalized;
   }
 
-  public boolean userNameIsUnique(ArrayList dataBase, String userName) {
+  public boolean userNameIsUnique(String userName) {
 
     // loop through the database
-    for (int i = 0; i < dataBase.size(); i++) {
-      Profile temporaryProfile = (Profile) dataBase.get(i);
-
-      if ((temporaryProfile.getName()).equals(userName)) {
-        // if it wasnt unique then return 0
-
+    for (Profile profile : this.dataBase) {
+      // if a matching profile was found, return false
+      if (profile.getName().equals(userName)) {
         return false;
       }
     }
-    // otherwise the username is unique
+    // if no matching name was found, it must be unique
     return true;
   }
 
-  public int getIndexOfMatchingProfile(ArrayList dataBase, String userName) {
-    for (int i = 0; i < dataBase.size(); i++) {
-      Profile temporaryProfile = (Profile) dataBase.get(i);
+  public int getIndexOfMatchingProfile(String userName) {
+    for (Profile profile : this.dataBase) {
 
-      // if the temporary profile name matches the username inputted, return the index
-      if (temporaryProfile.getName().equals(userName)) {
-        return i;
+      // if the profile name matches the username inputted, return the index
+      if (profile.getName().equals(userName)) {
+        return this.dataBase.indexOf(profile);
       }
     }
     // if the matching name wasnt found, return -1 to represent no profile found
