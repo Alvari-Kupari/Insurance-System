@@ -44,7 +44,7 @@ public class InsuranceSystem {
       }
       // initialise variables
       Profile profile = dataBase.get(i);
-      int numPolicies = profile.Policies.size();
+      int numPolicies = profile.policies.size();
 
       // next, format the word "policy" depending on how many policies they have
       String wordPolicy = "";
@@ -69,9 +69,9 @@ public class InsuranceSystem {
           Integer.toString(profile.getTotalPremium()));
 
       // next we will print the policy details of each client by looping through each policy
-      for (int j = 0; j < profile.Policies.size(); j++) {
+      for (int j = 0; j < profile.policies.size(); j++) {
         // extract the policy
-        Policy policy = profile.Policies.get(j);
+        Policy policy = profile.policies.get(j);
 
         // use an if statement to cover the different policy types
         if (policy instanceof LifePolicy) {
@@ -261,7 +261,7 @@ public class InsuranceSystem {
         LifePolicy lifePolicy = new LifePolicy(sumInsured, loadedProfile);
 
         // add policy to profile
-        loadedProfile.Policies.add(lifePolicy);
+        loadedProfile.policies.add(lifePolicy);
 
         // update string policytype
         policyType = "life";
@@ -276,7 +276,7 @@ public class InsuranceSystem {
         // convert string "y" / "n" to boolean
         boolean isRental;
         if (options[2].equals("yes")) {
-          // then true
+          // then it is a rental
           isRental = true;
 
         } else {
@@ -287,7 +287,7 @@ public class InsuranceSystem {
         HomePolicy homePolicy = new HomePolicy(sumInsured, options[1], isRental);
 
         // add policy to profile
-        loadedProfile.Policies.add(homePolicy);
+        loadedProfile.policies.add(homePolicy);
 
         // update string policytype
         policyType = "home";
@@ -312,7 +312,7 @@ public class InsuranceSystem {
                 sumInsured, loadedProfile, mechanicalBreakdownCovered, options[1], options[2]);
 
         // then add the policy to profile
-        loadedProfile.Policies.add(carPolicy);
+        loadedProfile.policies.add(carPolicy);
 
         // update string policytype
         policyType = "car";
